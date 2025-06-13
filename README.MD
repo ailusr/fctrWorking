@@ -1,3 +1,5 @@
+##**THIS IS THE LAST WORKING REPOSITORY OF CODE__USE THIS FOR REFERENCE TO FIGURE OUT WHAT BROKE IN THE NEWER VERSION OF THE CODE!**##
+
 # fctr – Fact Checking & Source Verification Extension
 
 <div align="center">
