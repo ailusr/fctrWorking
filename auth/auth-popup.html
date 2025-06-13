@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fctr Authentication</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: black;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .auth-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border: 2px solid #e5e7eb;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    /* Privacy Policy View Styles */
+    .auth-container.privacy-view {
+      max-width: 600px;
+      max-height: 80vh;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Ensure auth view is visible by default */
+    #auth-view {
+      display: block;
+    }
+    
+    /* Ensure privacy view is hidden by default */
+    #privacy-policy-view.hidden {
+      display: none !important;
+    }
+    
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: white;
+      border: 3px solid #1f2937;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      color: #1f2937;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .title-container {
+      margin-bottom: 32px;
+    }
+    
+    .fctr-title {
+      font-weight: 900;
+      color: #1f2937;
+      font-size: 56px;
+      letter-spacing: -5px;
+      margin: 0 0 8px 0;
+      line-height: 1;
+    }
+    
+    .fctr-subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      font-weight: 400;
+      margin: 0;
+    }
+    
+    .user-info {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+    
+    .user-email {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .user-credits {
+      color: #374151;
+      font-size: 12px;
+    }
+    
+    .welcome-message {
+      color: #374151;
+      margin-bottom: 24px;
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      width: 100%;
+    }
+    
+    .btn-primary {
+      background: #1f2937;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #374151;
+    }
+    
+    .btn-primary:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: #1f2937;
+      color: white;
+      border: 1px solid #1f2937;
+      margin-top: 12px;
+    }
+    
+    .btn-secondary:hover {
+      background: #374151;
+    }
+    
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* IMPORTANT: Make sure .hidden class is properly defined */
+    .hidden {
+      display: none !important;
+    }
+    
+    /* Privacy Policy Styles */
+    .privacy-policy-link {
+      color: #6b7280;
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 12px;
+      display: block;
+      text-align: center;
+      transition: color 0.2s;
+    }
+    
+    .privacy-policy-link:hover {
+      color: #374151;
+    }
+    
+    /* FIXED: Ensure privacy policy link can be properly hidden */
+    .privacy-policy-link.hidden {
+      display: none !important;
+    }
+    
+    .privacy-policy-view {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .privacy-header {
+      padding: 20px 30px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+    }
+    
+    .privacy-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0;
+    }
+    
+    .privacy-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 5px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    
+    .privacy-close:hover {
+      color: #1f2937;
+    }
+    
+    .privacy-content {
+      padding: 30px;
+      overflow-y: auto;
+      flex: 1;
+      background: white;
+      color: #1f2937;
+      line-height: 1.6;
+      text-align: left;
+    }
+    
+    .privacy-content h3 {
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    
+    .privacy-content p {
+      margin-bottom: 16px;
+      color: #374151;
+    }
+    
+    .privacy-content ul {
+      margin-bottom: 16px;
+      padding-left: 20px;
+    }
+    
+    .privacy-content li {
+      margin-bottom: 8px;
+      color: #374151;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container" id="auth-container">
+    <!-- Main Auth View -->
+    <div id="auth-view">
+      <div class="logo">
+        <!-- Dynamic lock icon - unlocked by default, locked when connected -->
+        <svg id="lock-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Unlocked state (default) -->
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <circle cx="12" cy="16" r="1"></circle>
+          <path d="M7 11V7a5 5 0 0 1 10 0"></path>
+        </svg>
+      </div>
+      
+      <div class="title-container">
+        <div class="fctr-title">fctr</div>
+        <div class="fctr-subtitle">from TOTMai labs.</div>
+      </div>
+      
+      <!-- Disconnected State -->
+      <div id="disconnected-state">
+        <div id="standalone-welcome-message" class="welcome-message" data-welcome-message>
+          Loading welcome message...
+        </div>
+        
+        <button id="login-btn" class="btn btn-primary">
+          <span id="login-text">Login with SSO</span>
+          <div id="login-spinner" class="spinner hidden"></div>
+        </button>
+        
+        <!-- Privacy Policy Link (only shown when not connected) -->
+        <a href="#" id="privacy-policy-link" class="privacy-policy-link">Privacy Policy</a>
+      </div>
+      
+      <!-- Connected State -->
+      <div id="connected-state" class="hidden">
+        <div class="user-info">
+          <div id="user-name" class="user-name">John Doe</div>
+          <div id="user-email" class="user-email">john@example.com</div>
+          <div id="user-credits" class="user-credits">Credits: 25 remaining</div>
+        </div>
+        
+        <button id="logout-btn" class="btn btn-secondary">
+          Logout
+        </button>
+      </div>
+    </div>
+    
+    <!-- Privacy Policy View -->
+    <div id="privacy-policy-view" class="privacy-policy-view hidden">
+      <div class="privacy-header">
+        <h2 class="privacy-title">Privacy Policy</h2>
+        <button id="privacy-close-btn" class="privacy-close">&times;</button>
+      </div>
+      <div class="privacy-content" id="privacy-content">
+        <!-- Privacy policy content will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Load JavaScript files -->
+  <script src="keycloak-config.js"></script>
+  <script src="auth-popup.js"></script>
+</body>
+</html>

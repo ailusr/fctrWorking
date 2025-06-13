@@ -1,0 +1,78 @@
+{
+  "manifest_version": 3,
+  "name": "fctr services",
+  "version": "2.5.0",
+  "description": "Fact Check or Source Trace selected text claims using OAuth authentication",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzWfvhBWZcgJXcLsAAzfcqL62h21ORBF4uldV8pRB5Ty38j0UQD1SacNJKHfxBgspnp7UtQA07U0SFkOtq+5O+mNA8qhGEVKfI88HgUG/Xcvb+b7dPY+3v6c3Ovo3G/+lizWdrt3n8u/OzsHpzPG2oqDuKl0n5Gt/RD3O+FLCsyKQ5m492UsGZRxvX+xeGEzvXQRkx8rbakpL2tRuF7oY5dzNe+anl+tzaym+TCCYoCY5LeZl4d0wjXEe7KNUD+NuCX1jVGALVplApQwIy65tj38ZguyHYd2nNaMAbndjXHnm3N4ICpn2qfPXuJQLoxcXfyeVnyEzsOkGFuzyAkN5KwIDAQAB",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png", 
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "modules/modal-styles.js",
+        "modules/native-utils.js",
+        "modules/utils.js",
+        "modules/auth-popup-ui.js",
+        "modules/auth-popup-interactions.js", 
+        "modules/auth-manager.js",
+        "modules/ai-detection-icons.js",
+        "modules/results-display.js",
+        "modules/results-parsing.js",
+        "content-script.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "permissions": [
+    "storage",
+    "activeTab",
+    "identity",
+    "scripting",
+    "contextMenus",
+    "downloads",
+    "notifications"
+  ],
+  
+  "commands": {
+    "fact-check": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Fact-check selected text using fctr"
+    }
+  },
+  
+  "host_permissions": [
+    "https://usw2.auth.ac/*",
+    "https://api.totmailabs.com:5001/*",
+    "https://api.totmailabs.com/*"
+  ],
+  
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "auth/auth-popup.html",
+        "auth/callback.html", 
+        "auth/callback.js",
+        "auth/auth-popup.js",
+        "auth/keycloak-config.js",
+        "modules/*.js",
+        "icons/*.png"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
